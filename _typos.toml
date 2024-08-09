@@ -15,10 +15,15 @@ lod = "lod"
 LOD = "LOD"
 ans = "ans"
 arange = "arange"
+ND = "ND"
 
 [files]
 extend-exclude = [
     ".gitignore",
     ".pre-commit-config.yaml",
     ".github/ISSUE_TEMPLATE/general_issue.md",
+    "*.csl",
+    "*.ttf",
+    "*otf",
+    "*.bib"
 ]
