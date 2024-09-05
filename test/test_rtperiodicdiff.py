@@ -8,7 +8,7 @@ import pytest
 from numpy.testing import assert_array_equal
 
 from pyrenew.deterministic import DeterministicVariable
-from pyrenew.process import RtWeeklyDiffARProcess
+from pyrenew.process import RtPeriodicDiffARProcess
 
 
 def test_rtweeklydiff() -> None:
@@ -17,7 +17,7 @@ def test_rtweeklydiff() -> None:
     params = {
         "name": "test",
         "offset": 0,
-        "log_rt_rv": DeterministicVariable(
+        "log_rt_init_rv": DeterministicVariable(
             name="log_rt", value=jnp.array([0.1, 0.2])
         ),
         "autoreg_rv": DeterministicVariable(
@@ -26,10 +26,11 @@ def test_rtweeklydiff() -> None:
         "periodic_diff_sd_rv": DeterministicVariable(
             name="periodic_diff_sd_rv", value=jnp.array([0.1])
         ),
+        "period_size": 7,
     }
     duration = 30
 
-    rtwd = RtWeeklyDiffARProcess(**params)
+    rtwd = RtPeriodicDiffARProcess(**params)
 
     with numpyro.handlers.seed(rng_seed=223):
         rt = rtwd(duration=duration).rt.value
@@ -44,7 +45,7 @@ def test_rtweeklydiff() -> None:
 
     # Checking start off a different day of the week
     params["offset"] = 5
-    rtwd = RtWeeklyDiffARProcess(**params)
+    rtwd = RtPeriodicDiffARProcess(**params)
 
     with numpyro.handlers.seed(rng_seed=223):
         rt2 = rtwd(duration=duration).rt.value
@@ -65,7 +66,7 @@ def test_rtweeklydiff_no_autoregressive() -> None:
     params = {
         "name": "test",
         "offset": 0,
-        "log_rt_rv": DeterministicVariable(
+        "log_rt_init_rv": DeterministicVariable(
             name="log_rt", value=jnp.array([0.0, 0.0])
         ),
         # No autoregression!
@@ -76,9 +77,10 @@ def test_rtweeklydiff_no_autoregressive() -> None:
             name="periodic_diff_sd_rv",
             value=jnp.array([0.1]),
         ),
+        "period_size": 7,
     }
 
-    rtwd = RtWeeklyDiffARProcess(**params)
+    rtwd = RtPeriodicDiffARProcess(**params)
 
     duration = 1000
 
@@ -109,7 +111,7 @@ def test_rtperiodicdiff_smallsample(inits):
     params = {
         "name": "test",
         "offset": 0,
-        "log_rt_rv": DeterministicVariable(
+        "log_rt_init_rv": DeterministicVariable(
             name="log_rt",
             value=inits,
         ),
@@ -120,9 +122,10 @@ def test_rtperiodicdiff_smallsample(inits):
             name="periodic_diff_sd_rv",
             value=jnp.array([0.1]),
         ),
+        "period_size": 7,
     }
 
-    rtwd = RtWeeklyDiffARProcess(**params)
+    rtwd = RtPeriodicDiffARProcess(**params)
 
     with numpyro.handlers.seed(rng_seed=223):
         rt = rtwd(duration=6).rt.value

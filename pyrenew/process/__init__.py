@@ -8,10 +8,7 @@ from pyrenew.process.iidrandomsequence import (
 )
 from pyrenew.process.periodiceffect import DayOfWeekEffect, PeriodicEffect
 from pyrenew.process.randomwalk import RandomWalk, StandardNormalRandomWalk
-from pyrenew.process.rtperiodicdiffar import (
-    RtPeriodicDiffARProcess,
-    RtWeeklyDiffARProcess,
-)
+from pyrenew.process.rtperiodicdiffar import RtPeriodicDiffARProcess
 
 __all__ = [
     "IIDRandomSequence",
@@ -23,5 +20,4 @@ __all__ = [
     "PeriodicEffect",
     "DayOfWeekEffect",
     "RtPeriodicDiffARProcess",
-    "RtWeeklyDiffARProcess",
 ]
